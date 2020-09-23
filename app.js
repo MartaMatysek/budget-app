@@ -30,19 +30,32 @@ var uiControler = (function() {
 
 var globalControler = (function(budgetControl, uiControl){
 
-    var DOM = uiControl.getDOMValues();
+    var setupEventListeners = function() {
+        var DOM = uiControl.getDOMValues();
+
+        document.querySelector(DOM.addButton).addEventListener('click', addItem);
+
+        document.addEventListener('keypress', function(event) {
+            if (event.key === "Enter") {
+                addItem();
+            } 
+        })
+    };
 
     var addItem = function() {
         var inputs = uiControl.readInputs();
         console.log(inputs);
     }
 
-    document.querySelector(DOM.addButton).addEventListener('click', addItem);
+    return {
+        init: function() {
+            console.log("Application has started!");
+            setupEventListeners();
+        }
+    }
 
-    document.addEventListener('keypress', function(event) {
-        if (event.key === "Enter") {
-            addItem();
-        } 
-    })
+    
 
 })(budgetControler, uiControler);
+
+globalControler.init();
