@@ -1,5 +1,41 @@
 var budgetControler = (function() {
-    // todo
+
+    var Expenses = function(id, description, value) {
+        this.id = id;
+        this.description = description;
+        this.value = value;
+    };
+    
+    var Incomes = function(id, description, value) {
+        this.id = id;
+        this.description = description;
+        this.value = value;
+    };
+
+    var budget = {
+        allItems: {
+            exp: [],
+            inc: []
+        }, 
+        totals: {
+            exp: 0,
+            inc: 0
+        }
+    };
+
+    return {
+        addNewItem: function(type, desc, val) {
+            var budgetType, ID, newItem;
+
+            budgetType = this.budget.allItems[type];
+            ID = budgetType[budgetType.length - 1].id + 1;
+
+            newItem = type === "exp" ? new Expenses(ID, desc, val) : new Incomes(ID, desc, val);
+            budgetType.push(newItem);
+
+            return newItem;
+        }
+    }
 })();
 
 var uiControler = (function() {
@@ -43,8 +79,9 @@ var globalControler = (function(budgetControl, uiControl){
     };
 
     var addItem = function() {
-        var inputs = uiControl.readInputs();
-        console.log(inputs);
+        var inputs, newItem;
+        inputs = uiControl.readInputs();
+        newItem = budgetControl.addNewItem(inputs.type, inputs.description, inputs.value);
     }
 
     return {
@@ -53,9 +90,7 @@ var globalControler = (function(budgetControl, uiControl){
             setupEventListeners();
         }
     }
-
     
-
 })(budgetControler, uiControler);
 
 globalControler.init();
