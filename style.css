@@ -17,7 +17,7 @@ body {
     height: 100hv;
 }
 
-.budget-right-side {
+.right-side {
     float: right;
 }
 
@@ -230,3 +230,33 @@ h2 {
     float: left;
     transition: transform 0.3s;
 }
+
+.item-delete {
+    float: left;
+}
+
+.income .item-value,
+.income .item-delete-btn {
+    color: #28B9B5;
+}
+
+.expenses .item-value,
+.expenses .item-delete-btn {
+    color: #FF5049;
+}
+
+.item-delete-btn {
+    font-size: 22px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 1;
+    display: none;
+}
+
+.item-delete-btn:focus { outline: none; }
+.item-delete-btn:active { transform: translateY(2px); }
+.item:hover .item-delete-btn { display: block; }
+.item:hover .item-value { transform: translateX(-20px); }
