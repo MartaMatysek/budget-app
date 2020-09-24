@@ -186,7 +186,7 @@ body {
     outline: none;
 }
 
-/*** BOTTOM PART ***/
+/*** BUDGET LIST ***/
 
 .container {
     width: 1000px;
@@ -213,3 +213,20 @@ h2 {
 
 .income-title { color: #28B9B5; }
 .expenses-title { color: #FF5049; }
+
+.item {
+    padding: 13px;
+    border-bottom: 1px solid #e7e7e7;
+}
+
+.item:first-child { border-top: 1px solid #e7e7e7; }
+.item:nth-child(even) { background-color: #f7f7f7; }
+
+.item-description {
+    float: left;
+}
+
+.item-value {
+    float: left;
+    transition: transform 0.3s;
+}
