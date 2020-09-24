@@ -25,17 +25,21 @@ var budgetControler = (function() {
 
     return {
         addNewItem: function(type, desc, val) {
-            var budgetType, ID, newItem;
+            var budgetList, ID, newItem;
 
-            budgetType = this.budget.allItems[type];
-            ID = budgetType[budgetType.length - 1].id + 1;
+            budgetList = budget.allItems[type];
+            if (budgetList.length > 0) {
+                ID = budgetList[budgetList.length - 1].id + 1;
+            } else {
+                ID = 0;
+            }
 
-            newItem = type === "exp" ? new Expenses(ID, desc, val) : new Incomes(ID, desc, val);
-            budgetType.push(newItem);
+            newItem = type === 'exp' ? new Expenses(ID, desc, val) : new Incomes(ID, desc, val);
+            budgetList.push(newItem);
 
             return newItem;
         }
-    }
+    };
 })();
 
 var uiControler = (function() {
@@ -44,7 +48,9 @@ var uiControler = (function() {
         inputType: '.add-type',
         inputDescription: '.add-description',
         inputValue: '.add-value',
-        addButton: '.btn-add'
+        addButton: '.btn-add', 
+        incomeList: '.income-list',
+        expensesList: '.expenses-list'
     }
 
     return {
@@ -59,6 +65,43 @@ var uiControler = (function() {
                 description: document.querySelector(DOMValues.inputDescription).value,
                 value: document.querySelector(DOMValues.inputValue).value
             };
+        },
+
+        addListItem: function(object, type) {
+            var html, containerType, newHtml;
+
+            if (type === 'inc') {
+                containerType = DOMValues.incomeList;
+                html = '<div class="item clearfix" id="inc-%id%">' + 
+                            '<div class="item-description">%description%</div>' + 
+                            '<div class="right-site">' + 
+                                '<div class="item-value">%value%</div>' + 
+                                '<div class="item-delete">' + 
+                                    '<button class="item-delete-btn"><i class="ion-ios-close-outline"></i></button>' + 
+                                '</div>' + 
+                            '</div>' + 
+                        '</div>';
+            } else {
+                containerType = DOMValues.expensesList;
+                html = '<div class="item clearfix" id="exp-%id%">' + 
+                            '<div class="item-description">%description%</div>' + 
+                            '<div class="right-site">' + 
+                                '<div class="item-value">%value%</div>' + 
+                                '<div class="item-delete">' + 
+                                    '<button class="item-delete-btn"><i class="ion-ios-close-outline"></i></button>' + 
+                                '</div>' + 
+                            '</div>' + 
+                        '</div>';
+            }
+
+            newHtml = html.replace('%id%', object.id);
+            newHtml = newHtml.replace('%description%', object.description);
+            newHtml = newHtml.replace('%value%', object.value);
+
+            console.log(object.description);
+            console.log(newHtml);
+            document.querySelector(containerType).insertAdjacentHTML('beforeend', newHtml);
+            console.log(newHtml);
         }
     };
 
@@ -72,7 +115,7 @@ var globalControler = (function(budgetControl, uiControl){
         document.querySelector(DOM.addButton).addEventListener('click', addItem);
 
         document.addEventListener('keypress', function(event) {
-            if (event.key === "Enter") {
+            if (event.key === 'Enter') {
                 addItem();
             } 
         })
@@ -82,15 +125,16 @@ var globalControler = (function(budgetControl, uiControl){
         var inputs, newItem;
         inputs = uiControl.readInputs();
         newItem = budgetControl.addNewItem(inputs.type, inputs.description, inputs.value);
+        uiControl.addListItem(newItem, inputs.type);
     }
 
     return {
         init: function() {
-            console.log("Application has started!");
+            console.log('Application has started!');
             setupEventListeners();
         }
     }
-    
+
 })(budgetControler, uiControler);
 
 globalControler.init();
