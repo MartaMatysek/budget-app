@@ -74,7 +74,7 @@ var uiControler = (function() {
                 containerType = DOMValues.incomeList;
                 html = '<div class="item clearfix" id="inc-%id%">' + 
                             '<div class="item-description">%description%</div>' + 
-                            '<div class="right-site">' + 
+                            '<div class="right-side clearfix">' + 
                                 '<div class="item-value">%value%</div>' + 
                                 '<div class="item-delete">' + 
                                     '<button class="item-delete-btn"><i class="ion-ios-close-outline"></i></button>' + 
@@ -85,7 +85,7 @@ var uiControler = (function() {
                 containerType = DOMValues.expensesList;
                 html = '<div class="item clearfix" id="exp-%id%">' + 
                             '<div class="item-description">%description%</div>' + 
-                            '<div class="right-site">' + 
+                            '<div class="right-side clearfix">' + 
                                 '<div class="item-value">%value%</div>' + 
                                 '<div class="item-delete">' + 
                                     '<button class="item-delete-btn"><i class="ion-ios-close-outline"></i></button>' + 
@@ -102,6 +102,15 @@ var uiControler = (function() {
             console.log(newHtml);
             document.querySelector(containerType).insertAdjacentHTML('beforeend', newHtml);
             console.log(newHtml);
+        }, 
+
+        clearFields: function() {
+            var fields;
+
+            fields = document.querySelectorAll(DOMValues.inputDescription + ', ' + DOMValues.inputValue);
+            fields.forEach(function(current) {
+                current.value = "";
+            })
         }
     };
 
@@ -126,6 +135,7 @@ var globalControler = (function(budgetControl, uiControl){
         inputs = uiControl.readInputs();
         newItem = budgetControl.addNewItem(inputs.type, inputs.description, inputs.value);
         uiControl.addListItem(newItem, inputs.type);
+        uiControl.clearFields();
     }
 
     return {
