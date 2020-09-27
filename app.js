@@ -63,7 +63,7 @@ var uiControler = (function() {
             return { 
                 type: document.querySelector(DOMValues.inputType).value,
                 description: document.querySelector(DOMValues.inputDescription).value,
-                value: document.querySelector(DOMValues.inputValue).value
+                value: parseFloat(document.querySelector(DOMValues.inputValue).value)
             };
         },
 
@@ -133,9 +133,12 @@ var globalControler = (function(budgetControl, uiControl){
     var addItem = function() {
         var inputs, newItem;
         inputs = uiControl.readInputs();
-        newItem = budgetControl.addNewItem(inputs.type, inputs.description, inputs.value);
-        uiControl.addListItem(newItem, inputs.type);
-        uiControl.clearFields();
+
+        if (inputs.description !== "" && !isNaN(inputs.value) && inputs.value > 0) {
+            newItem = budgetControl.addNewItem(inputs.type, inputs.description, inputs.value);
+            uiControl.addListItem(newItem, inputs.type);
+            uiControl.clearFields();
+        }
     }
 
     return {
