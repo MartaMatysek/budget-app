@@ -51,6 +51,18 @@ var budgetControler = (function() {
             return newItem;
         }, 
 
+        deleteItem: function(type, id) {
+            var indexOfItem;
+
+            indexOfItem = budget.allItems[type].map(function(curr) {
+                return curr.id;
+            }).indexOf(id);
+
+            if (indexOfItem !== -1) { 
+                budget.allItems[type].splice(indexOfItem, 1);
+            }
+        },
+
         calculateBudget: function() {
             var inc, exp;
 
@@ -92,7 +104,8 @@ var uiControler = (function() {
         budgetLabel: '.budget-value',
         totalIncomeLabel: '.budget-income-value',
         totalExpensesLabel: '.budget-expenses-value',
-        percentage: '.budget-expenses-percentage'
+        percentage: '.budget-expenses-percentage',
+        container: '.container'
     };
 
     return {
@@ -139,11 +152,7 @@ var uiControler = (function() {
             newHtml = html.replace('%id%', object.id);
             newHtml = newHtml.replace('%description%', object.description);
             newHtml = newHtml.replace('%value%', object.value);
-
-            console.log(object.description);
-            console.log(newHtml);
             document.querySelector(containerType).insertAdjacentHTML('beforeend', newHtml);
-            console.log(newHtml);
         }, 
 
         clearFields: function() {
@@ -164,6 +173,11 @@ var uiControler = (function() {
             } else {
                 document.querySelector(DOMValues.percentage).textContent = '---';
             }
+        },
+        
+        deleteItemList: function(selectorID) {
+            var el = document.getElementById(selectorID);
+            el.parentNode.removeChild(el);
         }
     };
 
@@ -180,7 +194,9 @@ var globalControler = (function(budgetControl, uiControl){
             if (event.key === 'Enter') {
                 addItem();
             } 
-        })
+        });
+
+        document.querySelector(DOM.container).addEventListener('click', deleteItem);
     };
 
     var calculateBudget = function() {
@@ -200,6 +216,23 @@ var globalControler = (function(budgetControl, uiControl){
             calculateBudget();
         }
     };
+
+    var deleteItem = function(event) {
+        var itemID, splitID, type, id;
+
+        itemID = event.target.parentNode.parentNode.parentNode.parentNode.id;
+        
+        if (itemID) {
+            splitID = itemID.split('-');
+            type = splitID[0];
+            id = parseInt(splitID[1]);
+
+            budgetControl.deleteItem(type, id);
+            uiControl.deleteItemList(itemID);
+            calculateBudget();
+        }
+
+    }
 
     return {
         init: function() {
