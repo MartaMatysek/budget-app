@@ -39,14 +39,14 @@ var budgetControler = (function() {
             var budgetList, ID, newItem;
 
             budgetList = budget.allItems[type];
-            if (budget.allItems[type].length > 0) {
-                ID = budget.allItems[type][budget.allItems[type].length - 1].id + 1;
+            if (budgetList.length > 0) {
+                ID = budgetList[budgetList.length - 1].id + 1;
             } else {
                 ID = 0;
             }
 
             newItem = type === 'exp' ? new Expenses(ID, desc, val) : new Incomes(ID, desc, val);
-            budget.allItems[type].push(newItem);
+            budgetList.push(newItem);
 
             return newItem;
         }, 
@@ -155,7 +155,7 @@ var uiControler = (function() {
             })
         },
 
-        updateBudget: function(newBudget) {
+        displayBudget: function(newBudget) {
             document.querySelector(DOMValues.budgetLabel).textContent = newBudget.totalBudget;
             document.querySelector(DOMValues.totalIncomeLabel).textContent = newBudget.totalInc;
             document.querySelector(DOMValues.totalExpensesLabel).textContent = newBudget.totalExp;
@@ -186,7 +186,7 @@ var globalControler = (function(budgetControl, uiControl){
     var calculateBudget = function() {
         budgetControl.calculateBudget();
         var newBudget = budgetControl.getBugdet();
-        uiControl.updateBudget(newBudget);
+        uiControl.displayBudget(newBudget);
     };
 
     var addItem = function() {
@@ -204,7 +204,7 @@ var globalControler = (function(budgetControl, uiControl){
     return {
         init: function() {
             console.log('Application has started!');
-            uiControl.updateBudget({
+            uiControl.displayBudget({
                 totalBudget: 0,
                 totalInc: 0,
                 totalExp: 0,
